@@ -1,5 +1,5 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
-import * as jwt from "jsonwebtoken";
+import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import * as jwt from 'jsonwebtoken';
 
 export class UserInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler) {
@@ -8,5 +8,4 @@ export class UserInterceptor implements NestInterceptor {
     request.user = await jwt.decode(token);
     return next.handle();
   }
-
 }

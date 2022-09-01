@@ -1,7 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import * as jwt from "jsonwebtoken";
-import { PrismaService } from "../prisma/prisma.service";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import * as jwt from 'jsonwebtoken';
+import { PrismaService } from '../prisma/prisma.service';
 
 interface JWTPayload {
   name: string;
@@ -12,30 +12,31 @@ interface JWTPayload {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-
   constructor(
     private readonly reflector: Reflector,
-    private readonly prismaService: PrismaService
-  ) {
-  }
+    private readonly prismaService: PrismaService,
+  ) {}
 
   async canActivate(context: ExecutionContext) {
-    const roles = this.reflector.getAllAndOverride("roles", [
+    const roles = this.reflector.getAllAndOverride('roles', [
       context.getHandler(),
-      context.getClass()
+      context.getClass(),
     ]);
     if (!roles?.length) {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    const token = request.headers?.authorization?.split("Bearer ")[1];
+    const token = request.headers?.authorization?.split('Bearer ')[1];
 
     try {
-      const payload = (await jwt.verify(token, process.env.JSON_TOKEN_KEY)) as JWTPayload;
+      const payload = (await jwt.verify(
+        token,
+        process.env.JSON_TOKEN_KEY,
+      )) as JWTPayload;
       const user = await this.prismaService.user.findUnique({
         where: {
-          id: payload.id
-        }
+          id: payload.id,
+        },
       });
       return user && roles.includes(user.user_type);
     } catch (e) {
