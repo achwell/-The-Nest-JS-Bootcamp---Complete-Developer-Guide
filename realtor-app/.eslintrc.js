@@ -1,8 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    ecmaVersion: "latest",
     project: 'tsconfig.json',
-    tsconfigRootDir : __dirname, 
+    tsconfigRootDir : __dirname,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
@@ -14,6 +15,7 @@ module.exports = {
   env: {
     node: true,
     jest: true,
+    es2021: true,
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
